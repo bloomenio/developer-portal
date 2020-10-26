@@ -1,0 +1,23 @@
+@import "~scss/variables.scss";
+
+.mat-dialog-content {
+    overflow: unset;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.action {
+    color: #0066A1;
+}
+
+mat-checkbox {
+    text-align: center;
+    margin-top: 4px;
+    color: #3E6192;
+    ::ng-deep .mat-checkbox-frame {
+        border-color:#3E6192; 
+    }
+}
+

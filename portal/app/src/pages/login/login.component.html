@@ -1,0 +1,36 @@
+<div class="login-wrapper mat-elevation-z8" fxLayout="column" fxLayoutAlign="end center">
+  <div class="box-section" fxLayout="column" fxLayoutAlign="center center">
+      <div class="login-box" fxLayout="column" fxLayoutAlign="space-between center">
+          <div class="brand"></div>
+         
+          <form [formGroup]="loginForm" fxLayout="row" fxLayoutAlign="space-evenly" (ngSubmit)="login()">
+            <div fxFlex fxLayout="column" fxLayoutAlign="space-around center">
+              <mat-form-field >
+                  <mat-label>{{ 'login.username' | translate }}</mat-label>
+                  <input type="email" matInput formControlName="username">
+              </mat-form-field>
+              <mat-form-field >
+                  <mat-label>{{ 'login.password' | translate }}</mat-label>
+                  <input type="password" matInput formControlName="password">
+              </mat-form-field>
+              <div class="error-box" fxLayout="row" fxLayoutAlign="center center" >
+                  <span *ngIf="error">{{'login.error' | translate }}</span>
+                </div>
+              <div class="actions-wrapper" fxLayout="row" fxLayoutAlign="end center" >
+                  <button class="loginButton" mat-button >{{ 'login.login' | translate | uppercase }}
+                  </button>
+              </div>
+            </div>
+          </form>
+          <div class="actions-wrapper"  fxLayout="row" fxLayoutAlign="space-between center">
+              <button mat-button routerLink="/reset">
+                  {{ 'login.restore_account' | translate | uppercase }}
+              </button>
+              <button mat-button routerLink="/register">                
+                {{ 'login.create_new_account' | translate | uppercase }}
+              </button>
+          </div>
+      </div>    
+  </div>
+  <div class="copyright"></div>
+</div>

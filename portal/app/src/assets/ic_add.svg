@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>ic_add</title>
+    <desc>Created with Sketch.</desc>
+    <g id="UX-Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="assets" transform="translate(-123.000000, -134.000000)" fill="#000000">
+            <g id="ic_add" transform="translate(123.000000, 134.000000)">
+                <polygon points="19 13 13 13 13 19 11 19 11 13 5 13 5 11 11 11 11 5 13 5 13 11 19 11"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

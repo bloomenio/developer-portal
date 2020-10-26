@@ -1,0 +1,6 @@
+ upstream telsius {
+        ip_hash;
+        server telsius1:22000;
+        server telsius2:22000;
+        server telsius3:22000;
+ }

@@ -1,0 +1,37 @@
+<div class="register-wrapper mat-elevation-z8" fxLayout="column" fxLayoutAlign="end center">
+    <div class="box-section" fxLayout="column" fxLayoutAlign="center center">
+    <div class="register-box" fxLayout="column" fxLayoutAlign="space-between center">
+        <div class="brand"></div>
+
+        <form *ngIf="!successfulRequest" [formGroup]="registerForm" fxLayout="row" fxLayoutAlign="space-between center" (ngSubmit)="register()">
+          <div fxFlex fxLayout="column" fxLayoutAlign="space-around center">
+            <mat-form-field fxFlex="45">
+                <mat-label>{{ 'register.firstName' | translate }}</mat-label>
+                <input matInput  formControlName="firstName">
+            </mat-form-field>
+            <mat-form-field fxFlex="45">
+                <mat-label>{{ 'register.lastName' | translate }}</mat-label>
+                <input matInput formControlName="lastName">
+            </mat-form-field>
+            <mat-form-field fxFlex="45">
+                <mat-label>{{ 'register.email' | translate }}</mat-label>
+                <input type="email" matInput formControlName="email">
+            </mat-form-field>
+            <div class="error-box" fxLayout="row" fxLayoutAlign="center center" >
+                <span *ngIf="error">{{'register.error' | translate }}</span>
+            </div>
+            <div class="actions-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                <button class="button" routerLink="/login" mat-button>{{ 'common.cancel' | translate | uppercase }}</button>
+                <button class="button action" mat-button >{{ 'register.register' | translate | uppercase }}</button>
+            </div> 
+          </div>
+        </form>
+        <div *ngIf="successfulRequest" class="register-ok" fxLayout="column" fxLayoutAlign="center center" >
+            <span> {{ 'register.ok' | translate }} </span>
+            <button class="button" routerLink="/login" mat-button>{{ 'login.login' | translate | uppercase }}</button>
+         </div>
+    </div>
+  </div>
+  <div class="copyright"></div>
+  </div>
+

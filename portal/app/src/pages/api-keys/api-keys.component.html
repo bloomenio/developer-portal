@@ -1,0 +1,61 @@
+<mat-toolbar color="primary">
+    <span class="page-title" translate>shell.menu.apiKeys</span>
+</mat-toolbar>
+
+<div *ngIf="(warnApiKeyList.length == 0 ) && (normalApiKeyTupleList.length == 0 )" class="no_data_found header-spacer" fxLayout="column" fxLayoutAlign="center center" >
+        <div class="no_data_image"></div>
+        <span class="no_data_message" translate>common.error.no_data_found</span>
+</div>  
+
+<div fxLayout="row wrap" class="card-wrapper header-spacer"> 
+    <mat-card *ngFor="let item of warnApiKeyList; let i = index" class="mat-card mat-elevation-z8 warn-api-key">
+        <div fxLayout="row" fxLayoutAlign="start center" class="mat-card-content">
+            <div class="left-panel warn" fxLayout="column" fxLayoutAlign="center stretch" >
+                <span [style.font-size.px]="getFontSize(getRemainingDays(item.expirationDate))">{{getRemainingDays(item.expirationDate)}}</span>
+                <span class="remain" translate>apiKeys.remaining_days</span>
+            </div>
+            <div class="right-panel" fxLayout="column" fxLayoutAlign="space-between center" >
+                    <div class="row-full" fxLayout="row" fxLayoutAlign="space-between center" >
+                        <span class="api-name" >{{item.name}}</span>
+                        <mat-icon (click)="deleteApiKey(item)">delete</mat-icon></div>
+                    <span class="row-full api-role" >{{item.role}}</span>
+                    <span class="row-full api-description" >{{item.description}}</span>
+                    <div class="row-full warning-panel" fxLayout="column" fxLayoutAlign="space-evenly center">
+                        <div class="warning-image"></div>
+                        <span class="warn-title">{{'apiKeys.warn_title' | translate:{'days': getRemainingDays(item.expirationDate) } }}</span>
+                        <span class="warn-description">{{'apiKeys.warn_description' | translate}}</span>
+                    </div>
+                    <div class="row-full button_wrapper" fxLayout="row" fxLayoutAlign="space-between center" >
+                        <button mat-button class="api-button" (click)="editApiKey(item)" >{{ 'common.edit' | translate }}</button>
+                        <button mat-button class="api-button" (click)="paymentApiKey(item)" >{{ 'apiKeys.buy' | translate }}</button>
+                    </div>
+            </div>
+        </div>
+    </mat-card> 
+
+    <div  *ngFor="let pair of normalApiKeyTupleList; let i = index"  fxLayout="column" fxLayoutAlign="space-between center" > 
+        <mat-card *ngFor="let item of pair ; let j = index" class="mat-card mat-elevation-z8 normal-api-key" [ngClass]="{ 'second-warn-api-key': j%2 != 0 }" >
+                <div fxLayout="row" fxLayoutAlign="start center" class="mat-card-content">
+                    <div class="left-panel" fxLayout="column" fxLayoutAlign="center center" >
+                        <span [style.font-size.px]="getFontSize(getRemainingDays(item.expirationDate))">{{getRemainingDays(item.expirationDate)}}</span>
+                        <span class="remain" translate>apiKeys.remaining_days</span>
+                    </div>
+                    <div class="right-panel" fxLayout="column" fxLayoutAlign="space-between center" >
+                            <div class="row-full" fxLayout="row" fxLayoutAlign="space-between center" >
+                                <span class="api-name" >{{item.name}}</span>
+                                <mat-icon (click)="deleteApiKey(item)">delete</mat-icon></div>
+                            <span class="row-full api-role" >{{item.role}}</span>
+                            <span class="row-full api-description" >{{item.description}}</span>
+                            <div class="row-full button_wrapper" fxLayout="row" fxLayoutAlign="space-between center" >
+                                <button mat-button class="api-button" (click)="editApiKey(item)" >{{ 'common.edit' | translate }}</button>
+                                <button mat-button class="api-button" (click)="paymentApiKey(item)" >{{ 'apiKeys.buy' | translate }}</button>
+                            </div>
+                    </div>
+                </div>
+        </mat-card> 
+    </div>
+</div>
+
+<button class="new-item" mat-fab (click)='addApiKey()' fxLayout="row"  fxLayoutAlign="center center" >
+    <mat-icon>add</mat-icon>
+</button>

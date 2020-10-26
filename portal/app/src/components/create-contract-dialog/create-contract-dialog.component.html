@@ -1,0 +1,26 @@
+<h1 mat-dialog-titletranslate translate>contracts.dialog.edit.title</h1> 
+<div mat-dialog-content>
+    <form [formGroup]="contractForm" fxLayout="column" fxLayoutAlign="start start">
+        <mat-form-field  >
+            <mat-label>{{ 'contracts.dialog.edit.name' | translate }}</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="contractForm.get('name').invalid">{{getErrorMessage('name')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'contracts.dialog.edit.description' | translate }}</mat-label>
+            <input matInput #descriptionInput  maxlength="200" formControlName="description" required>
+            <mat-hint align="end">{{descriptionInput.value?.length || 0}}/200</mat-hint>
+            <mat-error *ngIf="contractForm.get('description').invalid">{{getErrorMessage('description')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'contracts.dialog.edit.address' | translate }}</mat-label>
+            <input matInput formControlName="address" required>
+            <mat-error *ngIf="contractForm.get('address').invalid">{{getErrorMessage('address')}}</mat-error>
+        </mat-form-field>
+        <mat-checkbox  labelPosition="after" formControlName="public">{{'contracts.dialog.edit.public' | translate }}</mat-checkbox>
+    </form> 
+</div>
+<div  mat-dialog-actions fxLayout="row" fxLayoutAlign="end center"  >
+    <button mat-button [mat-dialog-close]>{{'common.cancel' | translate}}</button>
+    <button mat-button class="action" [disabled]="!contractForm.valid" [mat-dialog-close]="contractForm.value">{{'common.done' | translate}}</button>
+</div>

@@ -1,0 +1,41 @@
+<h1 mat-dialog-title translate>apiKeys.dialog.edit.title</h1>
+<div mat-dialog-content>
+    <form [formGroup]="apiKeyForm" fxLayout="column"  fxLayoutAlign="start start">
+        <mat-form-field >
+            <input matInput placeholder="{{ 'apiKeys.dialog.edit.name' | translate}}" formControlName="name" required>
+            <mat-error *ngIf="apiKeyForm.get('name').invalid">{{getErrorMessage('name')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field class="role-field">
+            <mat-label translate>apiKeys.dialog.edit.role</mat-label>
+            <mat-select formControlName="role" required>
+                <mat-option value="developer">{{ 'apiKeys.dialog.edit.developer' | translate}}</mat-option>
+                <mat-option value="user">{{ 'apiKeys.dialog.edit.user' | translate}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="apiKeyForm.get('role').invalid">{{getErrorMessage('role')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput #descriptionInput maxlength="200" placeholder="{{ 'apiKeys.dialog.edit.description' | translate}}" formControlName="description" required>
+            <mat-hint align="end">{{descriptionInput.value?.length || 0}}/200</mat-hint>
+            <mat-error *ngIf="apiKeyForm.get('description').invalid">{{getErrorMessage('description')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+            <input #search matInput placeholder="{{ 'apiKeys.dialog.edit.contracts' | translate}}" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                <mat-option *ngFor="let contract of contracts$ | async" [value]="contract">
+                    <span>{{contract.name}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-chip-list formArrayName="contracts">
+            <mat-chip class="contract-chip" *ngFor="let formContract of apiKeyForm.get('contracts')['controls']">
+                {{formContract.value.name}}
+                <mat-icon matChipRemove (click)="onRemoveContract(formContract.value)">cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+    </form>
+</div>
+<div mat-dialog-actions  fxLayout="row" fxLayoutAlign="end center" >
+    <button mat-button [mat-dialog-close]>{{'common.cancel' | translate}}</button>
+    <button mat-button [disabled]="!apiKeyForm.valid"
+        [mat-dialog-close]="apiKeyForm.value">{{'common.done' | translate}}</button>
+</div>

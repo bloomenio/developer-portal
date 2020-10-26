@@ -1,0 +1,156 @@
+
+
+    location ~ "^/rpc/([0-9a-zA-Z]+)/([0-9a-zA-Z]+)$" {        
+        
+        resolver 127.0.0.11 ipv6=off;
+        #CORS
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, PUT, POST, DELETE, OPTIONS';
+        add_header Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With";
+
+        if ($request_method = 'OPTIONS') {
+             add_header 'Access-Control-Allow-Origin' '*';
+             add_header 'Access-Control-Allow-Methods' 'GET, PUT, POST, DELETE, OPTIONS';
+             add_header 'Access-Control-Max-Age'        86400;
+             add_header 'Access-Control-Allow-Credentials' 'true';
+             add_header 'Access-Control-Allow-Headers' 'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+             add_header 'Content-Length' 0;
+             add_header 'Content-Type' 'text/plain; charset=UTF-8';
+             return 204;
+         }
+
+        set $eth_method ''; 
+        set $eth_to ''; 
+        set $eth_api_key ''; 
+        set $eth_network ''; 
+        set $eth_status 'OK';         
+        set $eth_tx ''; 
+        set $eth_tx_time -1; 
+        set $encodedTx '';
+        set $eth_contract_name '';
+        
+        rewrite_by_lua_block { 
+            local bloomenShared = require "bloomen-shared"
+            -- before sending the request to eth.
+            local ngx_re = require "ngx.re";  
+            local cjson = require "cjson";
+
+            ngx.req.read_body();            
+            local bodyData = ngx.req.get_body_data();
+            
+            local msg = cjson.decode(bodyData);
+            
+            ngx.var.eth_method = msg.method;
+
+            if ngx.var.eth_method then
+                -- only allowed methods
+                starts_with(ngx.var.eth_method, "eth_")
+				if not (starts_with(ngx.var.eth_method, "eth_") or starts_with(ngx.var.eth_method, "net_") or starts_with(ngx.var.eth_method, "web3_")) then
+                    ngx.var.eth_status = 'KO';
+					return ngx.exit(403); 
+				end
+			end
+            
+            local urlCtx =  ngx_re.split(ngx.var.uri, "/");
+
+            ngx.var.eth_api_key = urlCtx[4];
+            ngx.var.eth_network = urlCtx[3];
+       
+            if ngx.var.eth_method == "eth_sendRawTransaction" then
+                local encodedTx = msg.params[1];
+                ngx.var.encodedTx = encodedTx;
+                local data, remain =  bloomenShared.processRLPField(encodedTx:sub(3)); -- header array
+                data, remain =  bloomenShared.processRLPField(remain); -- nonce
+                data, remain =  bloomenShared.processRLPField(remain); -- gasPrice
+                data, remain =  bloomenShared.processRLPField(remain); -- gasLimit
+                data, remain =  bloomenShared.processRLPField(remain); -- to
+            
+                if not data then
+                    ngx.var.eth_status = 'KO';
+                    return ngx.exit(403);
+                else                                        
+                    ngx.var.eth_to = data;
+
+                    -- check apiKey + contract 
+            
+                    if not bloomenShared.checkApikeyContract(ngx.var.eth_api_key, ngx.var.eth_to) then
+                        ngx.var.eth_status = 'KO';
+                        return ngx.exit(403);
+                    end
+                end
+            elseif ngx.var.eth_method == "eth_call" then
+                ngx.var.eth_to = msg.params[1].to:sub(3);               
+                if not bloomenShared.checkApikeyContract(ngx.var.eth_api_key, ngx.var.eth_to) then
+                    ngx.var.eth_status = 'KO';
+                    return ngx.exit(403);
+                end
+            elseif ngx.var.eth_method == "eth_getTransactionReceipt" then
+                ngx.var.eth_tx = msg.params[1];
+            end
+           
+        }
+
+        body_filter_by_lua_block { 
+            local bloomenShared = require "bloomen-shared"
+
+             -- after sending the request to eth.
+
+            if ngx.var.eth_status == 'KO' then
+                return;
+            end
+
+            local method = ngx.var.eth_method;
+            
+            if method == "eth_sendRawTransaction" or method == "eth_getTransactionReceipt" then
+                local resp_body = ngx.arg[1]
+                -- create per request buffer
+                ngx.ctx.buffered = (ngx.ctx.buffered or "") .. resp_body 
+                if ngx.arg[2] then
+                    -- oef process all json response
+                    resp_body = ngx.ctx.buffered
+                    if  (resp_body == nil or resp_body == '') then 
+                        return;
+                    else              
+                        local cjson = require "cjson";
+                        local jsonResponse = cjson.decode(resp_body);
+                        local tx = ngx.shared.tx;
+                        
+                        if method == "eth_sendRawTransaction" then
+                            tx:add(jsonResponse.result, os.time(),bloomenShared.get('CONTRACT_TX_TTL'));                                       
+                        elseif jsonResponse.result ~= cjson.null and method == "eth_getTransactionReceipt" then
+                            local reqTime = tx:get(ngx.var.eth_tx);
+                            if reqTime then
+                            ngx.var.eth_tx_time = os.time() - reqTime;
+                            tx:delete(ngx.var.eth_tx);
+                            end
+                        end
+                    end
+                end
+            end
+        }
+
+        log_by_lua_block {
+            local bloomenShared = require "bloomen-shared"
+            local cjson = require "cjson";
+            local method = ngx.var.eth_method;
+            if ngx.var.eth_status == 'OK' then
+                ngx.log(ngx.ALERT, cjson.encode(
+                    {
+                        eth_method = ngx.var.eth_method; 
+                        eth_to = ngx.var.eth_to; 
+                        eth_contract_name = bloomenShared.getContractName(ngx.var.eth_to);
+                        eth_api_key = ngx.var.eth_api_key;
+                        eth_network = ngx.var.eth_network;                        
+                        eth_tx = ngx.var.eth_tx; 
+                        eth_tx_time = ngx.var.eth_tx_time; 
+                        -- encodedTx = ngx.var.encodedTx;
+                    }
+                ));
+            end
+        }  
+
+         proxy_set_header Host $host:$server_port;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_pass http://$eth_network;
+     }

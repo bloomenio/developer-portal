@@ -1,0 +1,105 @@
+@import "~scss/variables.scss";
+
+:host {
+  height: 100%;
+}
+
+.mat-toolbar {
+  &.app-bar {
+    height: 80px;
+    position: fixed;
+  }
+
+  &.browser-menu {
+    width: calc(100vw - 288px);
+  }
+
+  img {
+    height: 80px;
+  }
+}
+
+.mat-sidenav {
+  min-width: 289px;
+  max-width: 28%;
+}
+
+.back-button-wrapper {
+  color: black;
+  font-size:48px; 
+}
+
+.menu-button {
+  ::ng-deep .mat-button-focus-overlay {
+    background-color: white;
+  }
+}
+
+.active {
+  background-color: #E9F4FA;
+  color: #3E6192 ;
+  .txt-label {
+    color: #3E6192 
+  }
+  .menu_ic {
+    background-color: #3E6192 
+  }
+  &.menu-item {
+    border-left-style: solid;
+    border-left-width: 5px;
+    border-color:  #3E6192;
+  }
+}
+
+:focus {
+  outline: none;
+}
+
+.txt-label {	
+  height: 19px;	
+  width: 68px;	
+  font-size: 16px;	
+  letter-spacing: 0.5px;	
+  line-height: 19px;
+}
+
+.menu_ic{
+  width: 24px;
+  height: 24px;
+  border: none;
+  display:inline-block;
+  margin-left: 8px;
+  margin-right: 24px;
+  &.ic_api_key{
+    background-color: rgba(black, 0.87);
+    -webkit-mask-image: url(assets/ic_api_key.svg);
+    mask-image: url(assets/ic_api_key.svg);
+  }
+  &.ic_contracts{
+    background-color: rgba(black, 0.87);
+    -webkit-mask-image: url(assets/ic_contracts.svg);
+    mask-image: url(assets/ic_contracts.svg);
+  }
+}
+
+.sidenav-logo {
+  height: 128px;
+}
+
+.menu-item {
+  cursor: pointer;
+  height: 73px !important;
+} 
+
+.menu-item-row-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.my-avatar {
+  ::ng-deep .avatar-content {
+    background-color :#3974C0 !important;
+  }
+  margin-right: 16px;
+} 

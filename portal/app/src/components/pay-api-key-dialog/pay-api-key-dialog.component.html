@@ -1,0 +1,36 @@
+<h1 mat-dialog-title translate>apiKeys.dialog.payment.title</h1>
+<div mat-dialog-content fxLayout="column" fxLayoutAlign="start start">
+    
+    <div class="qr-section" [class.blue-bg]="!metaMaskToggle" [class.brown-bg]="metaMaskToggle" fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="qr-wrapper"  ngxClipboard [cbContent]="payQR" >
+            <qrcode *ngIf="!metaMaskToggle" class="qr-code" [qrdata]="payQR" [size]="150" [level]="'Q'"></qrcode>
+            <div *ngIf="metaMaskToggle" class="metamask-logo"></div>
+        </div>
+        <div class="info-wrapper" fxLayout="column" fxLayoutAlign="space-between center">
+            <span class="info-amount">{{value}}</span>
+            <span class="info-currency" translate>apiKeys.dialog.payment.currency</span>
+            <span class="info-description" translate>apiKeys.dialog.payment.description</span>
+        </div>    
+    </div>
+    <div class="metamask-selector-section" fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="metamask-logo"></div>
+                <span class="metamask-label" translate>apiKeys.dialog.payment.extension</span>
+        </div>
+        
+        <mat-slide-toggle [(ngModel)]="metaMaskToggle" [disabled]="metaMaskDisable" (change)="metaMaskChange($event)" >
+        </mat-slide-toggle>
+    </div>
+    <div class="slider-selector-section" fxLayout="column" fxLayoutAlign="space-between center">
+        <span class="slider-label" translate>apiKeys.dialog.payment.quantity</span>
+        <mat-slider class="slider-wrapper" [max]="99" min="1"  thumbLabel
+            [(ngModel)]="value" (ngModelChange)="onChange($event)"></mat-slider>
+    </div>
+
+</div>
+
+<div  mat-dialog-actions fxLayout="row" fxLayoutAlign="end center"  >
+    <button mat-button (click)="cancel()">{{'CANCEL' | translate}}</button>
+    <button mat-button *ngIf="!metaMaskToggle" class="action" (click)="redeem()" >{{'REDEEM' | translate}}</button>
+    <button mat-button *ngIf="metaMaskToggle" class="action" (click)="pay()">{{'PAY' | translate}}</button>
+</div>

@@ -1,0 +1,127 @@
+@import "~scss/variables.scss";
+
+.mat-dialog-content {
+    overflow: unset;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.action {
+    color: #0066A1;
+}
+
+mat-checkbox {
+    text-align: center;
+    margin-top: 4px;
+    color: #3E6192;
+    ::ng-deep .mat-checkbox-frame {
+        border-color:#3E6192; 
+    }
+}
+
+.blue-bg {
+    background-color: #007AB9;
+  }
+  .brown-bg {
+    background-color: #753F17;
+  }
+
+.qr-section {
+    height: 220px;
+    width: 100%;
+    border-radius: 8px 10px 10px 10px;
+    
+    .qr-wrapper {
+      padding: 14px 14px 14px 14px;
+      background-color: white;
+      margin-left: 14px;
+      border-radius: 8px 10px 10px 10px;
+      .qr-code {
+        width:90%;
+        padding-bottom: 10px;
+        padding-top: 10px;
+      }
+      .metamask-logo {
+        height: 150px;  
+        width:150px;  
+        padding-bottom: 10px;
+        padding-top: 10px;
+        background-image: url("assets/img_logo_metamask.png");
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+    }
+    .info-wrapper {
+        color: #FFFFFF;
+        text-align: center;
+        .info-amount {
+            font-size: 90px;
+            height: 90px;
+        }
+        .info-currency {
+            font-size: 24px;
+        }
+        .info-description {
+            margin-top: 24px;
+            font-size: 15px;
+        }
+
+    }
+}
+
+.metamask-selector-section {
+    height: 56px;
+    width: 100%;
+    padding: 0px 10px 0px 10px;
+    .metamask-logo {
+        background-image: url("assets/icon_metamask.png");
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 28px;
+        width: 28px;
+        margin-right: 8px;
+    }
+    .metamask-label {
+        font-size: 16px;
+    }
+}
+
+.slider-selector-section {
+    height: 150px;
+    width: 100%;
+    .slider-label {
+        margin-top: 16px;
+        margin-left: 5px;
+        width: 100%;
+        font-size: 16px;
+    }
+    .slider-wrapper {
+        width: 90%;
+        ::ng-deep {
+            .mat-slider-thumb-label {
+              transform: rotate(45deg) !important;
+              border-radius: 50% 50% 0 !important;
+            }
+            
+            .mat-slider-thumb {
+              transform: scale(0) !important;
+              -webkit-transform:  scale(0) !important;
+            }
+            
+            .mat-slider-thumb-label-text {
+              opacity: 1 !important;
+            }
+
+            .mat-slider-thumb-label {
+                -webkit-transform: translateY(-5px) scale(1.5) rotate(45deg)  !important;
+                transform: translateY(-5px) scale(1.5) rotate(45deg)  !important;
+            }
+            
+          }
+    }
+  
+}

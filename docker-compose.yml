@@ -1,0 +1,137 @@
+version: '2'
+services:
+  openresty:    
+    build:
+      context: ./openresty   
+    volumes:      
+      - ./ssl:/etc/nginx/ssl 
+    expose:
+      - 80
+      - 443
+      - 8000
+    ports:
+      - "80:80" 
+      - "8000:8000"    
+      - "443:443"
+    environment:
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_DB_API_KEY_COLLECTION=${MONGO_DB_API_KEY_COLLECTION}
+      - DEVELOPER_ACCESS_TTL=${DEVELOPER_ACCESS_TTL}
+      - MONGO_DB_CONTRACT_COLLECTION=${MONGO_DB_CONTRACT_COLLECTION}
+      - CONTRACT_NAME_TTL=${CONTRACT_NAME_TTL}
+      - MONGO_URL=${MONGO_URL}
+      - CONTRACT_ACCESS_TTL=${CONTRACT_ACCESS_TTL}
+      - CONTRACT_TX_TTL=${CONTRACT_TX_TTL}
+      - TZ=${TZ}
+      - SSL_ENABLED=${SSL_ENABLED}
+      - LETSENCRYPT=${LETSENCRYPT}
+      - LE_EMAIL=${LE_EMAIL}
+      - LE_FQDN=${LE_FQDN}
+      - PORTAL_USER=${PORTAL_USER}
+      - PORTAL_PASSWORD=${PORTAL_PASSWORD}
+    links:
+      - mongodb
+      - portal
+      - graylog
+    depends_on:
+      - mongodb
+      - portal
+      - graylog
+    extra_hosts:
+      - "telsius1:172.31.10.139"
+      - "telsius2:172.31.15.54"
+      - "telsius3:172.31.14.72"    
+    logging:
+          driver: gelf
+          options:
+            gelf-address: "udp://localhost:12201"
+            tag: OPENRESTY
+  portal:
+    build:
+      context: ./portal
+    expose:
+      - 3000
+    ports:
+      - "3000:3000" 
+    environment:
+      - DATABASE_HOST=mongodb
+      - DATABASE_PORT=27017
+      - DATABASE_NAME=${MONGO_DB_NAME}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - ALASTRIA_RPC_URL=${ALASTRIA_RPC_URL}
+      - ALASTRIA_NETWORK=${ALASTRIA_NETWORK}
+      - JWT_COOKIE_HTTP_ONLY=${JWT_COOKIE_HTTP_ONLY}
+      - JWT_COOKIE_DOMAIN=${JWT_COOKIE_DOMAIN}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_FROM=${MAIL_FROM}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_CUSTOM_RESET_PASSWORD_URL=${MAIL_CUSTOM_RESET_PASSWORD_URL}
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    extra_hosts:
+      - "telsius1:172.31.10.139"
+      - "telsius2:172.31.15.54"
+      - "telsius3:172.31.14.72"  
+  mongodb:
+    image: mongo:4
+    volumes:
+      - mongo_data:/data/db
+    expose:
+      - 27017
+    ports:
+      - "27017:27017" 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.1
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g  
+  graylog:
+    image: graylog/graylog:3.0
+    expose:
+      - 9000
+    volumes:
+      - graylog_journal:/usr/share/graylog/data/journal
+    environment:
+      # CHANGE ME (must be at least 16 characters)!
+      - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
+      # Password: admin
+      - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
+      - GRAYLOG_HTTP_EXTERNAL_URI=${GRAYLOG_HTTP_EXTERNAL_URI}
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    links:
+      - mongodb:mongo
+      - elasticsearch
+    depends_on:
+      - mongodb
+      - elasticsearch
+    ports:
+      - "9000:9000" 
+      # Syslog TCP
+      - 1514:1514
+      # Syslog UDP
+      - 1514:1514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
+# Volumes for persisting data, see https://docs.docker.com/engine/admin/volumes/volumes/
+volumes:
+  mongo_data:
+    driver: local
+  es_data:
+    driver: local
+  graylog_journal:
+    driver: local

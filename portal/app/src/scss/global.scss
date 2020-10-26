@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+  user-select: none;
+  overflow: hidden;
+
+  /* Change the white to any color ;) */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active  {
+      -webkit-box-shadow: 0 0 0 30px #E9F4FA inset !important;
+  }
+
+  mat-form-field .mat-form-field-flex {
+    background-color: #E9F4FA;
+  }
+
+  mat-form-field  mat-label {
+    padding-left: 4px;
+  }
+
+  mat-form-field  .mat-input-element {
+    padding-left: 4px;
+  }
+}
+

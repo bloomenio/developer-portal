@@ -1,0 +1,89 @@
+{
+  "common":{
+    "cancel":"CANCEL",
+    "done":"DONE",
+    "logout":"Logout",
+    "edit":"EDIT",
+    "accept":"YES",
+    "error": {
+      "required": "You must enter a value",
+      "not_valid_address": "Address not valid",
+      "no_data_found": "No data found"
+    }
+  },
+  "shell": {
+    "menu": {
+      "apiKeys" :"API Keys",
+      "contracts": "Contracts"
+    }
+  },
+  "login": {
+    "login": "login",
+    "create_new_account" :"REGISTER",
+    "restore_account": "RESTORE",
+    "username": "Username",
+    "password": "Password",
+    "error": "Invalid credentials"
+  },
+  "reset":{
+    "reset":"RESTORE",
+    "email":"Email",
+    "error": "User not found" ,
+    "ok": "The email has been sent"
+  },
+  "register":{
+    "register": "REGISTER",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "error": "Invalid user data" ,
+    "email": "Email",
+    "ok": "The email has been sent"
+  },
+  "apiKeys": {
+    "remaining_days": "Remaining days",
+    "warn_title" : "This service will expire in {{days}} days",
+    "warn_description" : "Your API Key is about to expire. You can add more days if you need it, by clicking on the “Buy more Time” button  and using the Bloomen Wallet or with the Metamask extension.",
+    "buy": "BUY MORE TIME",
+    "delete_message" :"You will delete this apiKey, Are you sure?",
+    "dialog":{
+      "payment":{
+        "title": "Buy Time for Api Key",
+        "currency":"Bloomen Coins",
+        "description":"Scan QR Code to proceed to buy more time using Bloomen Wallet.",
+        "extension": "Metamask Extension",
+        "quantity" : "Select the quantity of days you want to buy:"
+      },
+      "edit":{
+        "title": "Create new Api Key",
+        "name":"Name",
+        "description": "Description",
+        "contracts": "Contracts",
+        "role":"Choose a role",
+        "user":"USER",
+        "developer":"DEVELOPER"
+      }
+    }
+  },
+  "contracts":{
+    "delete_message" :"You will delete this contract, Are you sure?",
+    "table": {
+      "id":"Id",
+      "name":"Name",
+      "address": "Address",
+      "public":"Public",
+      "actions": "Actions"
+    },
+    "dialog":{
+      "edit":{
+        "title": "Create a contract",
+        "name":"Name",
+        "description": "Description",
+        "address": "Contract address",
+        "public":"It is a public contract",
+        "user":"USER",
+        "developer":"DEVELOPER"
+      }
+    }
+  }
+
+}

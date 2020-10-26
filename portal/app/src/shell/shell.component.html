@@ -1,0 +1,39 @@
+<div fxFlex>
+  <blo-loader [isLoading]="isLoading"></blo-loader>
+  <mat-sidenav-container class="app-layout " fxFill>
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" [disableClose]="!isMobile"
+      class="mat-elevation-z8" ngClass.gt-sm="has-border">
+      <mat-toolbar class="sidenav-logo">
+        <img *ngIf="imgToolbar" src="./assets/{{imgToolbar}}.png" />            
+      </mat-toolbar>
+      <nav>
+        <mat-list>       
+          <mat-list-item class="menu-item"  routerLink="/api-keys" routerLinkActive="active" (click)="isMobile && sidenav.close()">
+            <div class="menu-item-row-content" fxLayout="row" fxLayoutAlign="start center">
+              <div class="menu_ic ic_api_key"></div>
+              <span class="txt-label" translate>shell.menu.apiKeys</span>            
+            </div>
+          </mat-list-item>
+          <mat-list-item class="menu-item" routerLink="/contracts" routerLinkActive="active" (click)="isMobile && sidenav.close()">
+            <div class="menu_ic ic_contracts"></div>
+            <span class="txt-label" translate>shell.menu.contracts</span>
+          </mat-list-item>          
+        </mat-list>
+      </nav>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar ngClass.gt-sm="browser-menu" class="app-bar mat-elevation-z8" fxLayout="row" fxLayoutAlign="start center ">
+        <button class="menu-button" mat-icon-button (click)="sidenav.toggle()" fxHide.gt-sm>
+            <mat-icon class="back-button-wrapper">menu</mat-icon>
+        </button>  
+        <div style="width: 100%" fxLayout="row" fxLayoutAlign="end center ">
+          <span fxShow.gt-sm> <!-- prevent bloButtonsHost left aligment--></span>    
+          <ngx-avatar class="my-avatar" name="{{userName}}"></ngx-avatar>
+          <span>{{userName}}</span>
+          <ng-template bloButtonsHost></ng-template>   
+        </div> 
+      </mat-toolbar>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

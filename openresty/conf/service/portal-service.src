@@ -1,0 +1,22 @@
+location /dev-portal-api/assets {      
+    proxy_set_header Host $host:$server_port;   
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;     
+    proxy_pass http://portal:3000/assets;
+}
+
+location /dev-portal-api {
+    proxy_set_header Host $host:$server_port;   
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;     
+    proxy_pass http://portal:3000/dev-portal-api;
+}
+
+location /dev-portal {      
+    proxy_set_header Host $host:$server_port;   
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;     
+    proxy_pass http://portal:3000/dev-portal;
+}
+
+
